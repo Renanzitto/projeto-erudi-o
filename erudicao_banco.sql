@@ -56,3 +56,45 @@ CREATE TABLE CONTRIBUICAO (
   FOREIGN KEY (id_admin_avaliador) REFERENCES USUARIO(id_usuario),
   FOREIGN KEY (id_repertorio) REFERENCES REPERTORIO(id_repertorio)
 );
+CREATE TABLE MATERIAL_COMPLEMENTAR (
+  id_material INT AUTO_INCREMENT PRIMARY KEY,
+  titulo VARCHAR(200) NOT NULL,
+  descricao TEXT,
+  tipo ENUM('artigo', 'reportagem', 'video', 'documentario', 'debate', 'documento', 'site', 'outro') NOT NULL DEFAULT 'outro',
+  fonte VARCHAR(150),
+  url VARCHAR(500) NOT NULL,
+  data_publicacao DATE,
+  ativo BOOLEAN NOT NULL DEFAULT TRUE,
+  id_usuario_criador INT NOT NULL,
+  criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_usuario_criador) REFERENCES USUARIO(id_usuario)
+);
+CREATE TABLE TEMA_MATERIAL (
+  id_tema INT NOT NULL,
+  id_material INT NOT NULL,
+  PRIMARY KEY (id_tema, id_material),
+  FOREIGN KEY (id_tema) REFERENCES TEMA(id_tema) ON DELETE CASCADE,
+  FOREIGN KEY (id_material) REFERENCES MATERIAL_COMPLEMENTAR(id_material) ON DELETE CASCADE
+);
+
+CREATE TABLE REPERTORIO_MATERIAL (
+  id_repertorio INT NOT NULL,
+  id_material INT NOT NULL,
+  PRIMARY KEY (id_repertorio, id_material),
+  FOREIGN KEY (id_repertorio) REFERENCES REPERTORIO(id_repertorio) ON DELETE CASCADE,
+  FOREIGN KEY (id_material) REFERENCES MATERIAL_COMPLEMENTAR(id_material) ON DELETE CASCADE
+);
+INSERT INTO TEMA (titulo, descricao) VALUES
+('A valorização do Sistema Único de Saúde (SUS) como direito universal', 'Tema do Enem 2026.'),
+('Perspectivas acerca do envelhecimento na sociedade brasileira', 'Tema do Enem 2025.'),
+('Desafios para a valorização da herança africana no Brasil', 'Tema do Enem 2024.'),
+('Desafios para o enfrentamento da invisibilidade do trabalho de cuidado realizado pela mulher no Brasil', 'Tema do Enem 2023.'),
+('Desafios para a valorização de comunidades e povos tradicionais no Brasil', 'Tema do Enem 2022.'),
+('Invisibilidade e registro civil: garantia de acesso à cidadania no Brasil', 'Tema do Enem 2021.'),
+('O estigma associado às doenças mentais na sociedade brasileira', 'Tema do Enem 2020.'),
+('Democratização do acesso ao cinema no Brasil', 'Tema do Enem 2019.'),
+('Manipulação do comportamento do usuário pelo controle de dados na internet', 'Tema do Enem 2018.'),
+('Desafios para a formação educacional de surdos no Brasil', 'Tema do Enem 2017.'),
+('Caminhos para combater a intolerância religiosa no Brasil', 'Tema do Enem 2016.'),
+('A persistência da violência contra a mulher na sociedade brasileira', 'Tema do Enem 2015.');
+SELECT * FROM TEMA;
