@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Erudição — Carregando</title>
+  <style>
+    :root {
+      --verde: #495f4d;
+      --terracota: #bb481b;
+      --bege: #eadbc6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--verde);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+
+    body.fade-out { opacity: 0; }
+
+    /* espirais decorativas de fundo */
+    .esp {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+    }
+    .spinner-wrap, .logo-texto, p { position: relative; z-index: 1; }
+
+    .spinner-wrap {
+      animation: girar 1.8s linear infinite;
+      width: 110px;
+      height: 110px;
+    }
+
+    @keyframes girar {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .logo-texto {
+      margin-top: 2rem;
+      width: 180px;
+      opacity: 0.92;
+    }
+
+    p {
+      color: var(--bege);
+      font-family: Georgia, serif;
+      font-size: 0.95rem;
+      margin-top: 1.2rem;
+      letter-spacing: 1px;
+      opacity: 0.75;
+    }
+  </style>
+</head>
+<body>
+  <img class="esp" src="espiral-erudicao.png" style="width:360px;left:-110px;top:-90px;transform:rotate(20deg);opacity:0.07" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:160px;left:10%;bottom:12%;transform:rotate(-30deg);opacity:0.05" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:300px;right:-90px;bottom:-80px;transform:rotate(-15deg);opacity:0.07" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:120px;right:14%;top:12%;transform:rotate(40deg);opacity:0.05" alt="" />
+  <img class="spinner-wrap" src="espiral-erudicao.png" alt="Carregando…" />
+  <img class="logo-texto" src="logo_clean_raw1.svg - Copia.png" alt="Erudição" />
+  
+
+  <script>
+    // Redireciona para a página principal após a animação
+    setTimeout(() => {
+      document.body.classList.add("fade-out");
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 650);
+    }, 2200);
+  </script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Erudição — Área do Colaborador</title>
+  <style>
+    :root {
+      --verde: #495f4d;
+      --terracota: #bb481b;
+      --bege: #eadbc6;
+      --mustarda: #d7a43b;
+      --marrom: #5e3827;
+      --branco: #ffffff;
+      --cinza: #555;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      background: var(--bege);
+      color: var(--marrom);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      animation: aparecer 0.6s ease forwards;
+    }
+    @keyframes aparecer { to { opacity: 1; } }
+
+    header {
+      background: var(--verde);
+      padding: 1rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img { height: 50px; cursor: pointer; }
+
+    /* ── ESPIRAIS DE FUNDO (fixas, atrás do conteúdo) ── */
+    .fundo-espirais {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .fundo-espirais img { position: absolute; user-select: none; }
+    header, #conteudo, footer { position: relative; z-index: 1; }
+    nav { display: flex; gap: 1.2rem; align-items: center; }
+    nav a { color: var(--bege); text-decoration: none; font-size: 0.9rem; }
+    .btn-sair {
+      background: transparent;
+      color: var(--bege);
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 0.4rem 1rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      transition: background 0.2s;
+    }
+    .btn-sair:hover { background: rgba(255,255,255,0.1); }
+
+    .boas-vindas {
+      background: var(--verde);
+      color: var(--bege);
+      padding: 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .boas-vindas .espiral-bg {
+      position: absolute; right: -30px; top: -20px;
+      width: 180px; opacity: 0.07; pointer-events: none;
+    }
+    .boas-vindas h1 { font-size: 1.4rem; font-weight: normal; }
+    .boas-vindas p { font-size: 0.9rem; opacity: 0.75; margin-top: 0.3rem; }
+
+    main {
+      max-width: 760px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+    }
+
+    .card-form {
+      background: var(--branco);
+      border-radius: 6px;
+      padding: 2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .card-form h2 {
+      font-size: 1.1rem;
+      color: var(--verde);
+      font-weight: normal;
+      margin-bottom: 1.4rem;
+      border-bottom: 2px solid var(--terracota);
+      padding-bottom: 0.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--cinza);
+      margin-bottom: 0.3rem;
+      margin-top: 1rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-family: Georgia, serif;
+      color: var(--marrom);
+      outline: none;
+      transition: border 0.2s;
+      background: var(--branco);
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--terracota); }
+    textarea { resize: vertical; min-height: 90px; }
+
+    .btn-enviar {
+      margin-top: 1.6rem;
+      padding: 0.8rem 2rem;
+      background: var(--terracota);
+      color: var(--branco);
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-enviar:hover { background: #a03a14; }
+
+    .msg {
+      margin-top: 1rem;
+      font-size: 0.88rem;
+      text-align: center;
+      min-height: 1.2em;
+    }
+    .msg.ok { color: var(--verde); }
+    .msg.erro { color: var(--terracota); }
+
+    .aviso-login {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--cinza);
+    }
+    .aviso-login a {
+      color: var(--terracota);
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    /* Painel admin */
+    .admin-secao {
+      margin-top: 2.5rem;
+    }
+    .admin-secao h2 {
+      font-size: 1.1rem;
+      color: var(--verde);
+      font-weight: normal;
+      border-bottom: 2px solid var(--mustarda);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .card-pendente {
+      background: var(--branco);
+      border-left: 4px solid var(--mustarda);
+      border-radius: 4px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 0.8rem;
+    }
+    .card-pendente h3 { font-size: 0.98rem; color: var(--marrom); }
+    .card-pendente p { font-size: 0.85rem; color: var(--cinza); margin-top: 0.3rem; line-height: 1.5; }
+    .card-pendente .meta { font-size: 0.78rem; color: #aaa; margin-top: 0.3rem; }
+    .acoes { display: flex; gap: 0.7rem; margin-top: 0.8rem; }
+    .btn-aprovar {
+      padding: 0.4rem 1rem;
+      background: var(--verde);
+      color: var(--branco);
+      border: none;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      transition: background 0.2s;
+    }
+    .btn-aprovar:hover { background: #3a4f3d; }
+    .btn-rejeitar {
+      padding: 0.4rem 1rem;
+      background: transparent;
+      color: var(--terracota);
+      border: 1px solid var(--terracota);
+      border-radius: 4px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      transition: background 0.2s;
+    }
+    .btn-rejeitar:hover { background: #fdf0eb; }
+
+    footer {
+      background: var(--marrom);
+      color: var(--bege);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.82rem;
+      margin-top: 2rem;
+    }
+    footer a { color: var(--bege); text-decoration: none; font-weight: bold; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="fundo-espirais" aria-hidden="true">
+  <img src="espiral-erudicao.png" style="width:340px;left:-120px;top:14%;transform:rotate(15deg);opacity:0.09" alt="" />
+  <img src="espiral-erudicao.png" style="width:140px;left:5%;top:58%;transform:rotate(-25deg);opacity:0.07" alt="" />
+  <img src="espiral-erudicao.png" style="width:200px;left:-50px;bottom:-40px;transform:rotate(40deg);opacity:0.08" alt="" />
+  <img src="espiral-erudicao.png" style="width:300px;right:-100px;top:30%;transform:rotate(-20deg);opacity:0.09" alt="" />
+  <img src="espiral-erudicao.png" style="width:110px;right:6%;top:16%;transform:rotate(30deg);opacity:0.06" alt="" />
+  <img src="espiral-erudicao.png" style="width:160px;right:4%;bottom:8%;transform:rotate(-45deg);opacity:0.07" alt="" />
+</div>
+
+<header>
+  <img src="logo-erudicao.svg.png" alt="Erudição" onclick="ir('index.html')" />
+  <nav>
+    <a href="index.html">Início</a>
+    <button class="btn-sair" onclick="sair()">Sair</button>
+  </nav>
+</header>
+
+<div id="conteudo"></div>
+
+<footer>Erudição — Projeto Educacional &copy; 2026 &nbsp;·&nbsp; <a href="https://www.instagram.com/oprojetoerudicao/" target="_blank" rel="noopener noreferrer">@oprojetoerudicao</a></footer>
+
+<script>
+  // No Live Server (porta 5500) a API fica em outra porta; servido pelo Flask ou pelo link público, é o mesmo endereço.
+  const API = location.port === "5500" ? "http://127.0.0.1:5000" : "";
+  let usuarioLogado = null;
+
+  async function init() {
+    try {
+      const r = await fetch(`${API}/api/eu`, { credentials: "include" });
+      const d = await r.json();
+      if (!d.logado) {
+        mostrarNaoLogado();
+        return;
+      }
+      usuarioLogado = d;
+      mostrarPainel();
+    } catch {
+      mostrarNaoLogado();
+    }
+  }
+
+  function mostrarNaoLogado() {
+    document.getElementById("conteudo").innerHTML = `
+      <div class="aviso-login">
+        <p>Você precisa estar logado para acessar esta área.</p>
+        <br/>
+        <a href="login.html">→ Ir para o login</a>
+      </div>`;
+  }
+
+  async function mostrarPainel() {
+    const isAdmin = usuarioLogado.perfil === "administrador";
+
+    // Busca temas para o select
+    const rt = await fetch(`${API}/api/temas`);
+    const temas = await rt.json();
+    const opcoes = temas.map(t => `<option value="${t.id_tema}">${t.titulo}</option>`).join("");
+
+    let html = `
+      <div class="boas-vindas">
+        <img class="espiral-bg" src="espiral-erudicao.svg" alt="" />
+        <h1>Olá, ${usuarioLogado.nome}!</h1>
+        <p>${isAdmin ? "Você é administrador." : "Você é colaborador."}</p>
+      </div>
+      <main>
+        <div class="card-form">
+          <h2>Enviar repertório</h2>
+          <label>Tema</label>
+          <select id="id-tema"><option value="">Selecione…</option>${opcoes}</select>
+          <label>Título do repertório</label>
+          <input type="text" id="titulo-rep" placeholder="Ex: A Sociedade do Cansaço, de Byung-Chul Han" />
+          <label>Descrição</label>
+          <textarea id="desc-rep" placeholder="Explique o repertório e seu contexto…"></textarea>
+          <label>Como usar na redação (opcional)</label>
+          <textarea id="uso-rep" placeholder="Sugestão de como aplicar no texto…"></textarea>
+          <label>Fonte (opcional)</label>
+          <input type="text" id="fonte-rep" placeholder="Nome da obra, autor, ano…" />
+          <button class="btn-enviar" onclick="enviar()">Enviar contribuição</button>
+          <p class="msg" id="msg-envio"></p>
+        </div>`;
+
+    if (isAdmin) {
+      html += `
+        <div class="admin-secao">
+          <h2>Contribuições pendentes</h2>
+          <div id="lista-pendentes"><p style="color:var(--cinza);font-size:0.9rem">Carregando…</p></div>
+        </div>`;
+    }
+
+    html += `</main>`;
+    document.getElementById("conteudo").innerHTML = html;
+
+    if (isAdmin) carregarPendentes();
+  }
+
+  async function enviar() {
+    const msg = document.getElementById("msg-envio");
+    msg.className = "msg";
+    msg.textContent = "";
+
+    const id_tema = document.getElementById("id-tema").value;
+    const titulo = document.getElementById("titulo-rep").value.trim();
+    const descricao = document.getElementById("desc-rep").value.trim();
+    const como_usar = document.getElementById("uso-rep").value.trim();
+    const fonte = document.getElementById("fonte-rep").value.trim();
+
+    if (!id_tema || !titulo || !descricao) {
+      msg.className = "msg erro";
+      msg.textContent = "Preencha tema, título e descrição.";
+      return;
+    }
+
+    try {
+      const r = await fetch(`${API}/api/contribuicoes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ id_tema: parseInt(id_tema), titulo, descricao, como_usar, fonte }),
+      });
+      const d = await r.json();
+      if (!r.ok) { msg.className = "msg erro"; msg.textContent = d.erro; return; }
+      msg.className = "msg ok";
+      msg.textContent = "Contribuição enviada! Aguardando aprovação.";
+      document.getElementById("id-tema").value = "";
+      document.getElementById("titulo-rep").value = "";
+      document.getElementById("desc-rep").value = "";
+      document.getElementById("uso-rep").value = "";
+      document.getElementById("fonte-rep").value = "";
+      if (usuarioLogado.perfil === "administrador") carregarPendentes();
+    } catch {
+      msg.className = "msg erro";
+      msg.textContent = "Erro ao conectar com o servidor.";
+    }
+  }
+
+  async function carregarPendentes() {
+    const div = document.getElementById("lista-pendentes");
+    try {
+      const r = await fetch(`${API}/api/contribuicoes/pendentes`, { credentials: "include" });
+      const lista = await r.json();
+      if (!lista.length) {
+        div.innerHTML = '<p style="color:var(--cinza);font-size:0.9rem">Nenhuma contribuição pendente.</p>';
+        return;
+      }
+      div.innerHTML = lista.map(c => `
+        <div class="card-pendente" id="pend-${c.id_contribuicao}">
+          <h3>${c.titulo}</h3>
+          <p>${c.descricao}</p>
+          <p class="meta">Tema: ${c.tema} | Por: ${c.colaborador}</p>
+          <div class="acoes">
+            <button class="btn-aprovar" onclick="decidir(${c.id_contribuicao}, 'aprovar')">Aprovar</button>
+            <button class="btn-rejeitar" onclick="decidir(${c.id_contribuicao}, 'rejeitar')">Rejeitar</button>
+          </div>
+        </div>`).join("");
+    } catch {
+      div.innerHTML = '<p style="color:var(--cinza)">Erro ao carregar.</p>';
+    }
+  }
+
+  async function decidir(id, acao) {
+    try {
+      const r = await fetch(`${API}/api/contribuicoes/${id}/${acao}`, {
+        method: "POST",
+        credentials: "include",
+      });
+      if (r.ok) {
+        const el = document.getElementById(`pend-${id}`);
+        if (el) el.remove();
+      }
+    } catch { alert("Erro ao processar."); }
+  }
+
+  async function sair() {
+    await fetch(`${API}/api/logout`, { method: "POST", credentials: "include" });
+    ir("index.html");
+  }
+
+  function ir(url) {
+    document.body.style.transition = "opacity 0.4s";
+    document.body.style.opacity = "0";
+    setTimeout(() => window.location.href = url, 400);
+  }
+
+  init();
+</script>
+</body>
+</html>

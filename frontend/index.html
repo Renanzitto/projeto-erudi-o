@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Erudição — Projeto Educacional</title>
+  <style>
+    :root {
+      --verde: #495f4d;
+      --verde-escuro: #3E5646;
+      --terracota: #bb481b;
+      --bege: #eadbc6;
+      --mustarda: #d7a43b;
+      --marrom: #5e3827;
+      --branco: #ffffff;
+      --cinza: #666;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, serif;
+      background: var(--bege);
+      color: var(--marrom);
+      opacity: 0;
+      animation: aparecer 0.7s ease forwards;
+    }
+
+    @keyframes aparecer { to { opacity: 1; } }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--verde-escuro);
+      padding: 0.9rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    header img.logo { height: 50px; cursor: pointer; }
+
+    .header-direita {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+    }
+
+    .header-frases {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    /* frase + botão lado a lado */
+    .header-par {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .header-frase {
+      color: var(--bege);
+      font-size: 0.75rem;
+      opacity: 0.85;
+      font-style: italic;
+      line-height: 1.3;
+    }
+
+    .header-frase b {
+      color: var(--mustarda);
+      font-style: normal;
+      font-weight: normal;
+      display: block;
+    }
+
+    .btn-cadastrar {
+      background: transparent;
+      border: 1.5px solid var(--mustarda);
+      color: var(--mustarda) !important;
+    }
+    .btn-cadastrar:hover {
+      background: var(--mustarda) !important;
+      color: var(--verde-escuro) !important;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    nav a {
+      color: var(--bege);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--mustarda); }
+
+    .btn-nav {
+      background: var(--terracota);
+      color: var(--branco) !important;
+      padding: 0.42rem 1rem;
+      border-radius: 4px;
+      font-size: 0.84rem !important;
+      white-space: nowrap;
+      transition: background 0.2s !important;
+    }
+    .btn-nav:hover { background: #a03a14 !important; }
+    .header-par .btn-nav { text-decoration: none; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--verde-escuro);
+      color: var(--bege);
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      /* sem overflow:hidden aqui — senão a lista suspensa da busca é cortada */
+    }
+
+    /* camada só das espirais: ela é que corta o que sai da seção */
+    .hero-fundo {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .hero .esp {
+      position: absolute;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .hero .esp-1 { width: 340px; right: -80px; top: -60px; transform: rotate(15deg); }
+    .hero .esp-2 { width: 220px; left: -50px; bottom: -40px; transform: rotate(-20deg); }
+    .hero .esp-3 { width: 160px; left: 50%; top: -30px; transform: translateX(-50%) rotate(5deg); opacity: 0.04; }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: normal;
+      letter-spacing: 1px;
+      line-height: 1.2;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero p.sub {
+      margin-top: 0.8rem;
+      font-size: 1rem;
+      opacity: 0.8;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── BUSCA COM DROPDOWN ── */
+    .busca-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-top: 2.2rem;
+      gap: 0.5rem;
+      z-index: 10;
+      flex-wrap: wrap;
+    }
+
+    .busca-inner {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .busca-inner input {
+      width: 100%;
+      padding: 0.85rem 1.1rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-family: Georgia, serif;
+      color: var(--marrom);
+      outline: none;
+    }
+
+    .dropdown-temas {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: var(--branco);
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      max-height: 260px;
+      overflow-y: auto;
+      display: none;
+      z-index: 999;
+      text-align: left;
+    }
+
+    .dropdown-temas.aberto { display: block; }
+
+    .dropdown-item {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--marrom);
+      border-bottom: 1px solid #f0e8da;
+      transition: background 0.15s;
+    }
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item:hover { background: #fdf6ee; color: var(--terracota); }
+
+    .busca-container button {
+      padding: 0.85rem 1.6rem;
+      background: var(--terracota);
+      color: var(--branco);
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      align-self: flex-start;
+    }
+    .busca-container button:hover { background: #a03a14; }
+
+    /* ── FUNDO DE ESPIRAIS (seções creme) ── */
+    .com-espirais {
+      position: relative;
+      overflow-x: clip;      /* corta só as espirais nas laterais; objetos podem vazar p/ cima e p/ baixo */
+      overflow-y: visible;
+      z-index: 3;
+    }
+
+    .com-espirais .esp-bg {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.12;
+    }
+
+    /* ── SOBRE ── */
+    .sobre {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      max-width: 1100px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sobre-texto h2 {
+      font-size: 1.5rem;
+      color: var(--terracota);
+      font-weight: normal;
+      margin-bottom: 1rem;
+    }
+
+    .sobre-texto p {
+      font-size: 0.96rem;
+      line-height: 1.85;
+      color: var(--cinza);
+      margin-bottom: 0.8rem;
+    }
+
+    .sobre-foto {
+      position: relative;
+    }
+
+    .sobre-foto img.foto-principal {
+      width: 100%;
+      border-radius: 6px;
+      object-fit: cover;
+      max-height: 420px;
+      display: block;
+      box-shadow: 6px 6px 0 var(--terracota);
+    }
+
+    .sobre-foto .marca-pagina {
+      position: absolute;
+      top: -95px;
+      left: -55px;
+      width: 190px;
+      z-index: 5;
+      transform: rotate(-8deg);
+      filter: drop-shadow(3px 6px 8px rgba(0,0,0,0.3));
+    }
+
+    /* ── MISSÃO E VISÃO ── */
+    .missao-visao {
+      background: var(--verde-escuro);
+      color: var(--bege);
+      padding: 3.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .missao-visao .esp {
+      position: absolute;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+    .missao-visao .esp-1 { width: 300px; right: -60px; top: -40px; }
+    .missao-visao .esp-2 { width: 200px; left: -40px; bottom: -30px; transform: rotate(30deg); }
+
+    .missao-grid {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .missao-bloco h3 {
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mustarda);
+      margin-bottom: 0.6rem;
+    }
+
+    .missao-bloco p {
+      font-size: 0.96rem;
+      line-height: 1.8;
+      opacity: 0.88;
+    }
+
+    /* ── VALORES ── */
+    .valores {
+      background: var(--terracota);
+      padding: 4.5rem 2rem 4rem;
+      position: relative;
+      overflow-x: clip;
+      overflow-y: visible;
+      z-index: 4;
+    }
+
+    .valores .esp {
+      position: absolute;
+      opacity: 0.09;
+      pointer-events: none;
+    }
+    .valores .esp-1 { width: 180px; top: 0; right: 60px; transform: rotate(10deg); }
+    .valores .esp-2 { width: 120px; bottom: 0; left: 40px; transform: rotate(-15deg); }
+
+    /* objetos decorativos */
+    /* ficam entre uma seção e outra, vazando para fora do bloco */
+    .obj-caneca {
+      position: absolute;
+      width: 230px;
+      top: -90px;
+      right: 4%;
+      z-index: 5;
+      filter: drop-shadow(4px 8px 12px rgba(0,0,0,0.3));
+      transform: rotate(8deg);
+    }
+
+    .obj-caneta {
+      position: absolute;
+      width: 150px;
+      bottom: -75px;
+      left: 5%;
+      z-index: 5;
+      filter: drop-shadow(3px 6px 8px rgba(0,0,0,0.3));
+      transform: rotate(-25deg);
+    }
+
+    .obj-lapis {
+      position: absolute;
+      width: 150px;
+      bottom: -85px;
+      left: calc(5% + 140px);
+      z-index: 5;
+      filter: drop-shadow(3px 6px 8px rgba(0,0,0,0.3));
+      transform: rotate(-12deg);
+    }
+
+    .valores h2 {
+      text-align: center;
+      color: var(--bege);
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: normal;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 3;
+    }
+
+    .valores-grid {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 3;
+    }
+
+    .valor-tag {
+      background: rgba(255,255,255,0.15);
+      color: var(--bege);
+      padding: 0.65rem 1.5rem;
+      border-radius: 999px;
+      font-size: 1rem;
+      border: 1px solid rgba(255,255,255,0.3);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── TEMAS ── */
+    .temas-secao {
+      max-width: 900px;
+      margin: 3.5rem auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* espirais de fundo na seção creme de temas */
+    .temas-wrapper {
+      position: relative;
+      overflow: hidden;
+      background: var(--bege);
+      padding: 5.5rem 0 3rem;
+    }
+
+    .temas-wrapper .esp-bg-t {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.11;
+    }
+    .temas-wrapper .esp-bg-t.t1 { width: 280px; right: -60px; top: 0; transform: rotate(20deg); }
+    .temas-wrapper .esp-bg-t.t2 { width: 200px; left: -40px; bottom: 0; transform: rotate(-10deg); }
+
+    .secao-titulo {
+      font-size: 1.3rem;
+      color: var(--verde);
+      font-weight: normal;
+      border-bottom: 2px solid var(--terracota);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .lista-temas { list-style: none; position: relative; z-index: 1; }
+
+    .lista-temas li {
+      background: var(--branco);
+      border-left: 4px solid var(--terracota);
+      margin-bottom: 0.75rem;
+      padding: 1rem 1.25rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .lista-temas li:hover {
+      background: #fdf6ee;
+      transform: translateX(5px);
+    }
+
+    .lista-temas li strong { display: block; font-size: 0.98rem; color: var(--marrom); }
+    .lista-temas li span { font-size: 0.83rem; color: var(--cinza); margin-top: 0.2rem; display: block; }
+    .vazio { text-align: center; color: var(--cinza); padding: 2rem; }
+
+    /* ── RODAPÉ ── */
+    footer {
+      background: var(--marrom);
+      color: var(--bege);
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow-x: clip;
+      overflow-y: visible;
+      z-index: 6;
+    }
+
+    .footer-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr minmax(0, 420px) 1fr;
+      gap: 2rem;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ecobag grande, inclinada p/ a esquerda, ultrapassando o rodapé até a área de temas */
+    .footer-ecobag {
+      position: absolute;
+      left: 3vw;
+      bottom: 0;
+      z-index: 7;
+      pointer-events: none;
+    }
+
+    .footer-ecobag img {
+      display: block;
+      width: clamp(200px, 24vw, 340px);
+      transform: rotate(-14deg);
+      transform-origin: bottom center;
+      filter: drop-shadow(6px 10px 14px rgba(0,0,0,0.35));
+    }
+
+    .footer-centro { text-align: center; }
+
+    .footer-logo img { height: 44px; margin-bottom: 0.6rem; }
+
+    .footer-frase {
+      font-style: italic;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      max-width: 400px;
+      margin: 0.4rem auto;
+      line-height: 1.6;
+    }
+
+    .footer-autor {
+      font-size: 0.75rem;
+      opacity: 0.55;
+      margin-top: 0.3rem;
+    }
+
+    .footer-contato {
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      opacity: 0.7;
+    }
+
+    .footer-contato a {
+      color: var(--mustarda);
+      text-decoration: none;
+    }
+
+    .footer-contato a:hover { text-decoration: underline; }
+
+    .footer-agradecimento {
+      font-size: 0.78rem;
+      opacity: 0.5;
+      margin-top: 0.5rem;
+    }
+
+    .footer-esp {
+      position: absolute;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    .footer-esp.f1 { width: 220px; right: -40px; top: 0; }
+    .footer-esp.f2 { width: 160px; left: -30px; bottom: 0; transform: rotate(20deg); }
+
+    /* ── RESPONSIVO ── */
+    @media (max-width: 768px) {
+      .sobre { grid-template-columns: 1fr; }
+      .missao-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero h1 { font-size: 1.7rem; }
+      header { padding: 0.8rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+      .header-direita { gap: 0.8rem; flex-wrap: wrap; justify-content: flex-end; }
+      .header-frases { gap: 0.8rem; flex-wrap: wrap; justify-content: flex-end; }
+      .header-frase { display: none; }
+      .footer-inner { grid-template-columns: 1fr; text-align: center; }
+      .footer-centro { grid-column: 1 !important; }
+      .footer-ecobag { left: -20px; }
+      .footer-ecobag img { width: 150px; opacity: 0.9; }
+      .footer-inner { padding-left: 90px; }
+      .obj-caneca { width: 130px; top: -55px; }
+      .obj-caneta { width: 95px; bottom: -50px; }
+      .obj-lapis { width: 95px; bottom: -55px; left: calc(5% + 85px); }
+      .sobre-foto .marca-pagina { width: 110px; top: -60px; left: -15px; }
+      .sobre { margin-top: 5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <img class="logo" src="logo-erudicao.svg.png" alt="Erudição" onclick="ir('index.html')" />
+  <div class="header-direita">
+   
+    <div class="header-frases">
+      <div class="header-par">
+        <span class="header-frase">Quer adicionar repertório?<b>Entre como colaborador</b></span>
+        <a href="login.html" class="btn-nav">Entrar</a>
+      </div>
+      <div class="header-par">
+        <span class="header-frase">Não é colaborador?<b>Torne-se um</b></span>
+        <a href="login.html" class="btn-nav btn-cadastrar">Cadastrar</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-fundo">
+    <img class="esp esp-1" src="espiral-erudicao.png" alt="" />
+    <img class="esp esp-2" src="espiral-erudicao.png" alt="" />
+    <img class="esp esp-3" src="espiral-erudicao.png" alt="" />
+  </div>
+
+  <h1>Pesquise temas de redação</h1>
+  <p class="sub">Encontre repertórios, referências e materiais para construir argumentos sólidos.</p>
+
+  <div class="busca-container">
+    <div class="busca-inner">
+      <input
+        type="text"
+        id="campoBusca"
+        placeholder="Clique para ver os temas ou digite para filtrar…"
+        autocomplete="off"
+        onclick="abrirDropdown()"
+        oninput="filtrarDropdown()"
+        onkeydown="teclaEnter(event)"
+      />
+      <div class="dropdown-temas" id="dropdown"></div>
+    </div>
+    <button onclick="buscarTemas()">Buscar</button>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<div class="com-espirais">
+  <img class="esp-bg" src="espiral-erudicao.png" style="width:300px;right:-60px;top:20px;transform:rotate(25deg)" alt="" />
+  <img class="esp-bg" src="espiral-erudicao.png" style="width:200px;left:-40px;bottom:10px;transform:rotate(-15deg)" alt="" />
+  <img class="esp-bg" src="espiral-erudicao.png" style="width:150px;left:45%;top:40px;opacity:0.07" alt="" />
+
+  <div class="sobre">
+    <div class="sobre-texto">
+      <h2>O que é o Erudição?</h2>
+      <p>O Erudição é um projeto educacional voltado à valorização do conhecimento, especialmente das Ciências Humanas, por meio de encontros dinâmicos, pesquisas, debates, repertórios culturais e participação coletiva.</p>
+      <p>O projeto proporciona aos estudantes um ambiente acolhedor para explorar ideias, construir opiniões e ampliar sua visão de mundo. Mais do que transmitir conteúdos, o Erudição busca o conhecimento como ferramenta de desenvolvimento intelectual, expressão pessoal e transformação humana.</p>
+    </div>
+    <div class="sobre-foto">
+      <img class="marca-pagina" src="marca_pagina.png" alt="" />
+      <img class="foto-principal" src="provas.jpeg" alt="Projeto Erudição em ação" />
+    </div>
+  </div>
+</div>
+
+<!-- MISSÃO E VISÃO -->
+<section class="missao-visao">
+  <img class="esp esp-1" src="espiral-erudicao.png" alt="" />
+  <img class="esp esp-2" src="espiral-erudicao.png" alt="" />
+  <div class="missao-grid">
+    <div class="missao-bloco">
+      <h3>Missão</h3>
+      <p>Democratizar o acesso ao saber e desenvolver pessoas capazes de pensar, questionar e transformar a realidade em que vivem.</p>
+    </div>
+    <div class="missao-bloco">
+      <h3>Visão</h3>
+      <p>Tornar-se uma referência em educação humanística e formação crítica, ampliando sua presença em instituições de ensino e desenvolvendo uma proposta que una preparação acadêmica e desenvolvimento humano.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VALORES -->
+<section class="valores">
+  <img class="esp esp-1" src="espiral-erudicao.png" alt="" />
+  <img class="esp esp-2" src="espiral-erudicao.png" alt="" />
+  <img class="obj-caneca" src="caneca.png" alt="" />
+  <img class="obj-caneta" src="caneta.png" alt="" />
+  <img class="obj-lapis" src="ecolapis.png" alt="" />
+
+  <h2>Nossos valores</h2>
+  <div class="valores-grid">
+    <span class="valor-tag">Pertencimento</span>
+    <span class="valor-tag">Diversidade</span>
+    <span class="valor-tag">Cultura</span>
+    <span class="valor-tag">Criatividade</span>
+    <span class="valor-tag">Empatia</span>
+  </div>
+</section>
+
+<!-- TEMAS -->
+<div class="temas-wrapper">
+  <img class="esp-bg-t t1" src="espiral-erudicao.png" alt="" />
+  <img class="esp-bg-t t2" src="espiral-erudicao.png" alt="" />
+  <div class="temas-secao">
+    <p class="secao-titulo">Temas disponíveis</p>
+    <ul class="lista-temas" id="listaTemas">
+      <li class="vazio">Carregando temas…</li>
+    </ul>
+  </div>
+</div>
+
+<!-- RODAPÉ -->
+<footer>
+  <img class="footer-esp f1" src="espiral-erudicao.png" alt="" />
+  <img class="footer-esp f2" src="espiral-erudicao.png" alt="" />
+  <div class="footer-ecobag">
+      <img src="ecobag.png" alt="Ecobag Erudição" />
+  </div>
+  <div class="footer-inner">
+    <div class="footer-centro" style="grid-column:2">
+      <div class="footer-logo"><img src="logo-erudicao.svg.png" alt="Erudição" /></div>
+      <p class="footer-frase">"O que a arte quer é exatamente isso: fazer com que o homem não esqueça que é homem."</p>
+      <p class="footer-autor">— Ariano Suassuna</p>
+      <p class="footer-contato">
+        <a href="mailto:contato@erudicao.com.br">contato@erudicao.com.br</a>
+        &nbsp;·&nbsp;
+        <a href="https://www.instagram.com/oprojetoerudicao/" target="_blank" rel="noopener noreferrer">@oprojetoerudicao</a>
+      </p>
+      <p class="footer-agradecimento">Obrigado por visitar o Erudição — Projeto Educacional &copy; 2026</p>
+    </div>
+    <div></div>
+  </div>
+</footer>
+
+<script>
+  // No Live Server (porta 5500) a API fica em outra porta; servido pelo Flask ou pelo link público, é o mesmo endereço.
+  const API = location.port === "5500" ? "http://127.0.0.1:5000" : "";
+  let todosTemas = [];
+
+  // ── DROPDOWN DE BUSCA ──
+  async function carregarTemas() {
+    try {
+      const r = await fetch(`${API}/api/temas`);
+      todosTemas = await r.json();
+      renderizarTemas(todosTemas);
+      preencherDropdown(todosTemas);
+    } catch {
+      document.getElementById("listaTemas").innerHTML =
+        '<li class="vazio">Erro ao conectar com o servidor.</li>';
+    }
+  }
+
+  function preencherDropdown(temas) {
+    const dd = document.getElementById("dropdown");
+    if (!temas.length) {
+      dd.innerHTML = '<div class="dropdown-item" style="color:#aaa">Nenhum tema encontrado.</div>';
+      return;
+    }
+    dd.innerHTML = temas.map(t =>
+      `<div class="dropdown-item" onclick="irTema(${t.id_tema})">${t.titulo}</div>`
+    ).join("");
+  }
+
+  function abrirDropdown() {
+    document.getElementById("dropdown").classList.add("aberto");
+  }
+
+  function filtrarDropdown() {
+    const busca = document.getElementById("campoBusca").value.trim().toLowerCase();
+    const filtrados = busca
+      ? todosTemas.filter(t => t.titulo.toLowerCase().includes(busca))
+      : todosTemas;
+    preencherDropdown(filtrados);
+    document.getElementById("dropdown").classList.add("aberto");
+    renderizarTemas(filtrados);
+  }
+
+  function teclaEnter(e) {
+    if (e.key === "Enter") {
+      document.getElementById("dropdown").classList.remove("aberto");
+      buscarTemas();
+    }
+    if (e.key === "Escape") {
+      document.getElementById("dropdown").classList.remove("aberto");
+    }
+  }
+
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".busca-inner")) {
+      document.getElementById("dropdown").classList.remove("aberto");
+    }
+  });
+
+  function irTema(id) {
+    document.getElementById("dropdown").classList.remove("aberto");
+    ir(`tema.html?id=${id}`);
+  }
+
+  async function buscarTemas() {
+    const busca = document.getElementById("campoBusca").value.trim();
+    const url = busca
+      ? `${API}/api/temas?busca=${encodeURIComponent(busca)}`
+      : `${API}/api/temas`;
+    try {
+      const r = await fetch(url);
+      const temas = await r.json();
+      renderizarTemas(temas);
+    } catch {
+      document.getElementById("listaTemas").innerHTML =
+        '<li class="vazio">Erro ao conectar com o servidor.</li>';
+    }
+  }
+
+  function renderizarTemas(temas) {
+    const lista = document.getElementById("listaTemas");
+    if (!temas.length) {
+      lista.innerHTML = '<li class="vazio">Nenhum tema encontrado.</li>';
+      return;
+    }
+    lista.innerHTML = temas.map(t => `
+      <li onclick="ir('tema.html?id=${t.id_tema}')">
+        <strong>${t.titulo}</strong>
+        <span>${t.descricao || ""}</span>
+      </li>`).join("");
+  }
+
+  function ir(url) {
+    document.body.style.transition = "opacity 0.4s";
+    document.body.style.opacity = "0";
+    setTimeout(() => window.location.href = url, 400);
+  }
+
+  carregarTemas();
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

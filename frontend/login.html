@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Erudição — Entrar</title>
+  <style>
+    :root {
+      --verde: #495f4d;
+      --terracota: #bb481b;
+      --bege: #eadbc6;
+      --mustarda: #d7a43b;
+      --marrom: #5e3827;
+      --branco: #ffffff;
+      --cinza: #555;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      background: var(--bege);
+      color: var(--marrom);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      animation: aparecer 0.6s ease forwards;
+    }
+    @keyframes aparecer { to { opacity: 1; } }
+
+    header {
+      background: var(--verde);
+      padding: 1rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img { height: 50px; cursor: pointer; }
+    nav a.btn-voltar {
+      display: inline-block;
+      background: #34483b;
+      color: var(--bege);
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      padding: 0.45rem 1.2rem;
+      border-radius: 4px;
+      border: 1px solid rgba(234,219,198,0.25);
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    nav a.btn-voltar:hover {
+      background: #2a3b30;
+      color: var(--mustarda);
+      border-color: var(--mustarda);
+    }
+
+    .pagina {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* espirais de fundo */
+    .pagina .esp, footer .esp {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .caixa {
+      background: var(--branco);
+      border-radius: 6px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 2;
+    }
+
+    .caixa .espiral-topo {
+      display: block;
+      width: 54px;
+      margin: 0 auto 1rem;
+    }
+
+    .caixa h2 {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: normal;
+      color: var(--verde);
+      margin-bottom: 0.3rem;
+    }
+
+    .caixa p.sub {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--cinza);
+      margin-bottom: 1.8rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--cinza);
+      margin-bottom: 0.3rem;
+      margin-top: 1rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-family: Georgia, serif;
+      color: var(--marrom);
+      outline: none;
+      transition: border 0.2s;
+    }
+    input:focus { border-color: var(--terracota); }
+
+    .btn-principal {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 0.85rem;
+      background: var(--terracota);
+      color: var(--branco);
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-principal:hover { background: #a03a14; }
+
+    .msg-erro {
+      margin-top: 1rem;
+      color: var(--terracota);
+      font-size: 0.88rem;
+      text-align: center;
+      min-height: 1.2em;
+    }
+
+    .alternativa {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--cinza);
+    }
+    .alternativa a { color: var(--terracota); text-decoration: none; }
+    .alternativa a:hover { text-decoration: underline; }
+
+    /* abas */
+    .abas {
+      display: flex;
+      border-bottom: 2px solid #eee;
+      margin-bottom: 1.2rem;
+    }
+    .aba {
+      flex: 1;
+      text-align: center;
+      padding: 0.6rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--cinza);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .aba.ativa { color: var(--terracota); border-color: var(--terracota); }
+
+    .painel { display: none; }
+    .painel.ativo { display: block; }
+
+    footer {
+      background: var(--marrom);
+      color: var(--bege);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.82rem;
+      position: relative;
+      overflow: hidden;
+    }
+    footer span { position: relative; z-index: 1; }
+    footer a { color: var(--bege); text-decoration: none; font-weight: bold; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="logo-erudicao.svg.png" alt="Erudição" onclick="ir('index.html')" />
+  <nav><a href="index.html" class="btn-voltar">Voltar</a></nav>
+</header>
+
+<div class="pagina">
+  <img class="esp" src="espiral-erudicao.png" style="width:340px;left:-90px;top:-70px;transform:rotate(20deg);opacity:0.1" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:220px;left:12%;top:38%;transform:rotate(-25deg);opacity:0.06" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:150px;left:3%;bottom:-30px;transform:rotate(35deg);opacity:0.09" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:90px;left:24%;top:8%;transform:rotate(10deg);opacity:0.07" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:280px;right:-80px;top:-40px;transform:rotate(-15deg);opacity:0.11" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:170px;right:9%;bottom:6%;transform:rotate(40deg);opacity:0.07" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:110px;right:22%;top:14%;transform:rotate(-35deg);opacity:0.06" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:240px;right:-60px;bottom:-70px;transform:rotate(25deg);opacity:0.09" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:130px;left:30%;bottom:4%;transform:rotate(-10deg);opacity:0.05" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:80px;right:34%;bottom:22%;transform:rotate(50deg);opacity:0.08" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:190px;left:-50px;top:52%;transform:rotate(-5deg);opacity:0.07" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:100px;left:44%;top:-25px;transform:rotate(30deg);opacity:0.05" alt="" />
+  <div class="caixa">
+    <img class="espiral-topo" src="espiral-erudicao.png" alt="" />
+    <h2>Bem-vindo ao Erudição</h2>
+    <p class="sub">Entre ou crie uma conta para contribuir</p>
+
+    <div class="abas">
+      <div class="aba ativa" onclick="trocarAba('login')">Entrar</div>
+      <div class="aba" onclick="trocarAba('cadastro')">Cadastrar</div>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="painel ativo" id="painel-login">
+      <label for="email-login">E-mail</label>
+      <input type="email" id="email-login" placeholder="seu@email.com" />
+      <label for="senha-login">Senha</label>
+      <input type="password" id="senha-login" placeholder="••••••••" />
+      <button class="btn-principal" onclick="fazerLogin()">Entrar</button>
+      <p class="msg-erro" id="erro-login"></p>
+    </div>
+
+    <!-- CADASTRO -->
+    <div class="painel" id="painel-cadastro">
+      <label for="nome-cad">Nome</label>
+      <input type="text" id="nome-cad" placeholder="Seu nome" />
+      <label for="email-cad">E-mail</label>
+      <input type="email" id="email-cad" placeholder="seu@email.com" />
+      <label for="senha-cad">Senha (mínimo 8 caracteres)</label>
+      <input type="password" id="senha-cad" placeholder="••••••••" />
+      <button class="btn-principal" onclick="fazerCadastro()">Criar conta</button>
+      <p class="msg-erro" id="erro-cadastro"></p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <img class="esp" src="espiral-erudicao.png" style="width:140px;left:6%;top:-30px;transform:rotate(15deg);opacity:.06" alt="" />
+  <img class="esp" src="espiral-erudicao.png" style="width:100px;right:8%;bottom:-25px;transform:rotate(-30deg);opacity:.05" alt="" />
+  <span>Erudição — Projeto Educacional &copy; 2026 &nbsp;·&nbsp; <a href="https://www.instagram.com/oprojetoerudicao/" target="_blank" rel="noopener noreferrer">@oprojetoerudicao</a></span>
+</footer>
+
+<script>
+  // No Live Server (porta 5500) a API fica em outra porta; servido pelo Flask ou pelo link público, é o mesmo endereço.
+  const API = location.port === "5500" ? "http://127.0.0.1:5000" : "";
+
+  function trocarAba(qual) {
+    document.querySelectorAll(".aba").forEach(a => a.classList.remove("ativa"));
+    document.querySelectorAll(".painel").forEach(p => p.classList.remove("ativo"));
+    document.querySelector(`.aba:nth-child(${qual === "login" ? 1 : 2})`).classList.add("ativa");
+    document.getElementById(`painel-${qual}`).classList.add("ativo");
+  }
+
+  if (location.hash === "#cadastro") trocarAba("cadastro");
+
+  async function fazerLogin() {
+    const email = document.getElementById("email-login").value.trim();
+    const senha = document.getElementById("senha-login").value;
+    const erro = document.getElementById("erro-login");
+    erro.textContent = "";
+
+    if (!email || !senha) { erro.textContent = "Preencha e-mail e senha."; return; }
+
+    try {
+      const r = await fetch(`${API}/api/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, senha }),
+      });
+      const d = await r.json();
+      if (!r.ok) { erro.textContent = d.erro || "Erro ao entrar."; return; }
+      ir("colaborador.html");
+    } catch {
+      erro.textContent = "Não foi possível conectar ao servidor.";
+    }
+  }
+
+  async function fazerCadastro() {
+    const nome = document.getElementById("nome-cad").value.trim();
+    const email = document.getElementById("email-cad").value.trim();
+    const senha = document.getElementById("senha-cad").value;
+    const erro = document.getElementById("erro-cadastro");
+    erro.textContent = "";
+
+    if (!nome || !email || !senha) { erro.textContent = "Preencha todos os campos."; return; }
+    if (senha.length < 8) { erro.textContent = "A senha precisa ter pelo menos 8 caracteres."; return; }
+
+    try {
+      const r = await fetch(`${API}/api/cadastro`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ nome, email, senha }),
+      });
+      const d = await r.json();
+      if (!r.ok) { erro.textContent = d.erro || "Erro ao criar conta."; return; }
+      erro.style.color = "green";
+      erro.textContent = "Conta criada! Entrando…";
+      setTimeout(() => ir("colaborador.html"), 1000);
+    } catch {
+      erro.textContent = "Não foi possível conectar ao servidor.";
+    }
+  }
+
+  function ir(url) {
+    document.body.style.transition = "opacity 0.4s";
+    document.body.style.opacity = "0";
+    setTimeout(() => window.location.href = url, 400);
+  }
+
+  // Permitir Enter nos campos
+  document.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      const ativa = document.querySelector(".painel.ativo").id;
+      if (ativa === "painel-login") fazerLogin();
+      else fazerCadastro();
+    }
+  });
+</script>
+</body>
+</html>

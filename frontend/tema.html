@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Erudição — Tema</title>
+  <style>
+    :root {
+      --verde: #495f4d;
+      --terracota: #bb481b;
+      --bege: #eadbc6;
+      --mustarda: #d7a43b;
+      --marrom: #5e3827;
+      --branco: #ffffff;
+      --cinza: #555;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      background: var(--bege);
+      color: var(--marrom);
+      opacity: 0;
+      animation: aparecer 0.6s ease forwards;
+    }
+    @keyframes aparecer { to { opacity: 1; } }
+
+    header {
+      background: var(--verde);
+      padding: 1rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+    header img.logo { height: 52px; }
+    nav { display: flex; align-items: center; gap: 1.5rem; }
+    nav a { color: var(--bege); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    nav a:hover { color: var(--mustarda); }
+    .btn-nav {
+      background: var(--terracota);
+      color: var(--branco) !important;
+      padding: 0.45rem 1.1rem;
+      border-radius: 4px;
+      font-size: 0.88rem !important;
+    }
+
+    .hero-tema {
+      background: var(--verde);
+      color: var(--bege);
+      padding: 3rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    /* ── ESPIRAIS DE FUNDO (fixas, atrás do conteúdo) ── */
+    .fundo-espirais {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .fundo-espirais img { position: absolute; user-select: none; }
+    .hero-tema, main, footer { position: relative; z-index: 1; }
+
+    .hero-tema .espiral-bg {
+      position: absolute; right: -40px; top: -30px;
+      width: 240px; opacity: 0.07; pointer-events: none;
+    }
+    .breadcrumb {
+      font-size: 0.82rem;
+      opacity: 0.65;
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+    }
+    .breadcrumb:hover { opacity: 1; }
+    .hero-tema h1 {
+      font-size: 1.7rem;
+      font-weight: normal;
+      max-width: 760px;
+      line-height: 1.35;
+    }
+    .hero-tema p.descricao {
+      margin-top: 0.6rem;
+      opacity: 0.75;
+      font-size: 0.95rem;
+    }
+
+    main { max-width: 900px; margin: 2.5rem auto; padding: 0 1.5rem; }
+
+    .secao-titulo {
+      font-size: 1.1rem;
+      color: var(--verde);
+      font-weight: normal;
+      border-bottom: 2px solid var(--terracota);
+      padding-bottom: 0.4rem;
+      margin-bottom: 1.2rem;
+      margin-top: 2rem;
+    }
+
+    .card-repertorio {
+      background: var(--branco);
+      border-left: 4px solid var(--terracota);
+      border-radius: 4px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1rem;
+    }
+    .card-repertorio h3 { font-size: 1rem; color: var(--marrom); margin-bottom: 0.4rem; }
+    .card-repertorio p { font-size: 0.9rem; color: var(--cinza); line-height: 1.65; }
+    .card-repertorio .como-usar {
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--verde);
+      border-top: 1px solid #eee;
+      padding-top: 0.5rem;
+    }
+    .card-repertorio .fonte {
+      font-size: 0.8rem;
+      color: #999;
+      margin-top: 0.4rem;
+    }
+
+    .card-material {
+      background: var(--branco);
+      border-left: 4px solid var(--mustarda);
+      border-radius: 4px;
+      padding: 1rem 1.4rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .card-material h3 { font-size: 0.95rem; color: var(--marrom); }
+    .card-material p { font-size: 0.85rem; color: var(--cinza); margin-top: 0.2rem; line-height: 1.5; }
+    .card-material .tipo {
+      background: var(--mustarda);
+      color: var(--branco);
+      font-size: 0.72rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card-material a {
+      display: inline-block;
+      margin-top: 0.4rem;
+      color: var(--terracota);
+      font-size: 0.83rem;
+    }
+
+    .vazio { color: var(--cinza); font-size: 0.9rem; padding: 0.5rem 0; }
+
+    .btn-contribuir {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.75rem 1.8rem;
+      background: var(--terracota);
+      color: var(--branco);
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .btn-contribuir:hover { background: #a03a14; }
+
+    footer {
+      background: var(--marrom);
+      color: var(--bege);
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.85rem;
+      margin-top: 3rem;
+    }
+    footer a { color: var(--bege); text-decoration: none; font-weight: bold; }
+    footer a:hover { text-decoration: underline; }
+    footer img { height: 36px; margin-bottom: 0.6rem; display: block; margin: 0 auto 0.6rem; }
+
+    @media (max-width: 600px) {
+      .hero-tema h1 { font-size: 1.3rem; }
+      header { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="fundo-espirais" aria-hidden="true">
+  <img src="espiral-erudicao.png" style="width:320px;left:-110px;top:22%;transform:rotate(20deg);opacity:0.09" alt="" />
+  <img src="espiral-erudicao.png" style="width:150px;left:4%;top:62%;transform:rotate(-30deg);opacity:0.07" alt="" />
+  <img src="espiral-erudicao.png" style="width:90px;left:9%;bottom:6%;transform:rotate(45deg);opacity:0.06" alt="" />
+  <img src="espiral-erudicao.png" style="width:280px;right:-90px;top:40%;transform:rotate(-15deg);opacity:0.09" alt="" />
+  <img src="espiral-erudicao.png" style="width:130px;right:5%;top:78%;transform:rotate(35deg);opacity:0.07" alt="" />
+  <img src="espiral-erudicao.png" style="width:100px;right:8%;top:24%;transform:rotate(-40deg);opacity:0.06" alt="" />
+</div>
+
+<header>
+  <img class="logo" src="logo-erudicao.svg.png" alt="Erudição" onclick="ir('index.html')" style="cursor:pointer" />
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="login.html" class="btn-nav">Entrar</a>
+  </nav>
+</header>
+
+<div class="hero-tema">
+  <img class="espiral-bg" src="espiral-erudicao.png" alt="" />
+  <p class="breadcrumb" onclick="ir('index.html')">← Voltar aos temas</p>
+  <h1 id="tituloTema">Carregando…</h1>
+  <p class="descricao" id="descricaoTema"></p>
+</div>
+
+<main>
+  <p class="secao-titulo">Repertórios</p>
+  <div id="listaRepertorios"><p class="vazio">Carregando…</p></div>
+
+  <p class="secao-titulo">Materiais complementares</p>
+  <div id="listaMateriais"><p class="vazio">Carregando…</p></div>
+
+  <a href="colaborador.html" class="btn-contribuir">Contribuir com um repertório</a>
+</main>
+
+<footer>
+  <img src="logo-erudicao.svg.png" alt="Erudição" />
+  Erudição — Projeto Educacional &copy; 2026 &nbsp;·&nbsp; <a href="https://www.instagram.com/oprojetoerudicao/" target="_blank" rel="noopener noreferrer">@oprojetoerudicao</a>
+</footer>
+
+<script>
+  // No Live Server (porta 5500) a API fica em outra porta; servido pelo Flask ou pelo link público, é o mesmo endereço.
+  const API = location.port === "5500" ? "http://127.0.0.1:5000" : "";
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  if (!id) window.location.href = "index.html";
+
+  // "Texto da fonte | https://link" → texto + link clicável "Ver fonte ↗"
+  function formatarFonte(fonte) {
+    const [texto, url] = fonte.split(" | ");
+    if (url && /^https?:\/\//.test(url.trim())) {
+      return `${texto} — <a href="${url.trim()}" target="_blank" rel="noopener noreferrer">Ver fonte ↗</a>`;
+    }
+    return fonte;
+  }
+
+  async function carregar() {
+    try {
+      const r = await fetch(`${API}/api/temas/${id}`);
+      if (!r.ok) { window.location.href = "index.html"; return; }
+      const d = await r.json();
+
+      document.title = `Erudição — ${d.titulo}`;
+      document.getElementById("tituloTema").textContent = d.titulo;
+      document.getElementById("descricaoTema").textContent = d.descricao || "";
+
+      const divR = document.getElementById("listaRepertorios");
+      if (!d.repertorios.length) {
+        divR.innerHTML = '<p class="vazio">Nenhum repertório publicado ainda para este tema.</p>';
+      } else {
+        divR.innerHTML = d.repertorios.map(r => `
+          <div class="card-repertorio">
+            <h3>${r.titulo}</h3>
+            <p>${r.descricao}</p>
+            ${r.como_usar ? `<p class="como-usar"><strong>Como usar:</strong> ${r.como_usar}</p>` : ""}
+            ${r.fonte ? `<p class="fonte">Fonte: ${formatarFonte(r.fonte)}</p>` : ""}
+          </div>`).join("");
+      }
+
+      const divM = document.getElementById("listaMateriais");
+      if (!d.materiais.length) {
+        divM.innerHTML = '<p class="vazio">Nenhum material complementar disponível.</p>';
+      } else {
+        divM.innerHTML = d.materiais.map(m => `
+          <div class="card-material">
+            <div>
+              <h3>${m.titulo}</h3>
+              ${m.descricao ? `<p>${m.descricao}</p>` : ""}
+              ${m.url ? `<a href="${m.url}" target="_blank" rel="noopener">Acessar →</a>` : ""}
+            </div>
+            <span class="tipo">${m.tipo}</span>
+          </div>`).join("");
+      }
+    } catch {
+      document.getElementById("listaRepertorios").innerHTML =
+        '<p class="vazio">Erro ao carregar. Verifique se o servidor está no ar.</p>';
+    }
+  }
+
+  function ir(url) {
+    document.body.style.transition = "opacity 0.4s";
+    document.body.style.opacity = "0";
+    setTimeout(() => window.location.href = url, 400);
+  }
+
+  carregar();
+</script>
+</body>
+</html>

@@ -7,9 +7,32 @@ from flask_cors import CORS
 
 load_dotenv()
 
-app = Flask(__name__)
+# O Flask também entrega as páginas da pasta frontend: assim o site inteiro
+# (páginas + API) fica num endereço só — necessário para o link público.
+PASTA_FRONTEND = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend")
+app = Flask(__name__, static_folder=PASTA_FRONTEND, static_url_path="")
 app.secret_key = os.getenv("SECRET_KEY")
-CORS(app)
+
+# Configurações de sessão — essenciais para o cookie funcionar entre frontend e backend
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = False   # True apenas em HTTPS (produção)
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+
+# O frontend usa credentials: "include" (cookie de sessão), então a origem
+# precisa ser explícita — "*" não é aceito pelo navegador nesse caso.
+CORS(
+    app,
+    resources={r"/api/*": {"origins": [
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+    ]}},
+    supports_credentials=True,
+)
+
+
+@app.route("/")
+def pagina_inicial():
+    return app.send_static_file("loading.html")
 
 
 def conectar():
@@ -33,14 +56,13 @@ def teste():
         return jsonify({"status": "ok", "temas_cadastrados": total})
     except Exception as erro:
         return jsonify({"status": "erro", "mensagem": str(erro)}), 500
-@app.route("/api/temas")
 
+
+@app.route("/api/temas")
 def listar_temas():
     busca = request.args.get("busca", "").strip()
-
     conexao = conectar()
     cursor = conexao.cursor(dictionary=True)
-
     if busca:
         cursor.execute(
             "SELECT id_tema, titulo, descricao FROM TEMA "
@@ -52,11 +74,11 @@ def listar_temas():
             "SELECT id_tema, titulo, descricao FROM TEMA "
             "WHERE ativo = TRUE ORDER BY titulo"
         )
-
     temas = cursor.fetchall()
     cursor.close()
     conexao.close()
     return jsonify(temas)
+
 
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -85,7 +107,12 @@ def login():
 
     session["id_usuario"] = usuario["id_usuario"]
     session["perfil"] = usuario["perfil"]
-    return jsonify({"mensagem": "Login realizado.", "nome": usuario["nome"], "perfil": usuario["perfil"]})
+    return jsonify({
+        "mensagem": "Login realizado.",
+        "nome": usuario["nome"],
+        "perfil": usuario["perfil"],
+    })
+
 
 @app.route("/api/cadastro", methods=["POST"])
 def cadastro():
@@ -96,12 +123,10 @@ def cadastro():
 
     if not nome or not email or not senha:
         return jsonify({"erro": "Informe nome, e-mail e senha."}), 400
-
     if len(senha) < 8:
         return jsonify({"erro": "A senha precisa ter pelo menos 8 caracteres."}), 400
 
     senha_hash = bcrypt.hashpw(senha.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-
     conexao = conectar()
     cursor = conexao.cursor()
     try:
@@ -118,6 +143,7 @@ def cadastro():
         conexao.close()
 
     return jsonify({"mensagem": "Cadastro realizado com sucesso."}), 201
+
 
 @app.route("/api/logout", methods=["POST"])
 def logout():
@@ -146,6 +172,7 @@ def quem_sou_eu():
         return jsonify({"logado": False})
 
     return jsonify({"logado": True, "nome": usuario["nome"], "perfil": usuario["perfil"]})
+
 
 def exige_login():
     if "id_usuario" not in session:
@@ -278,6 +305,7 @@ def rejeitar_contribuicao(id_contribuicao):
         return jsonify({"erro": "Contribuição pendente não encontrada."}), 404
     return jsonify({"mensagem": "Contribuição rejeitada."})
 
+
 @app.route("/api/temas/<int:id_tema>")
 def detalhe_tema(id_tema):
     conexao = conectar()
@@ -315,5 +343,9 @@ def detalhe_tema(id_tema):
     conexao.close()
     return jsonify(tema)
 
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Debug fica DESLIGADO por padrão: com o site exposto num link público,
+    # o modo debug permitiria que qualquer pessoa executasse código no seu PC.
+    # Para desenvolver com debug: $env:FLASK_DEBUG="1" antes de rodar.
+    app.run(debug=os.getenv("FLASK_DEBUG") == "1")
